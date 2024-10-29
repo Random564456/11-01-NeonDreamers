@@ -6,7 +6,7 @@ const Landing = () => {
   const navigate = useNavigate()
 
   return (
-    <div className='flex items-center justify-center h-[700px] w-screen bg-black'>
+    <div className='flex items-center justify-center h-screen w-screen bg-black'>
 
 
       {/* TEXT DIV */}
@@ -18,7 +18,13 @@ const Landing = () => {
           <p className='text-[20px] text-white'>Investigate and analyze housing prices using <br/> advanced machine learning techniques</p>
         </div>
         <div>
-          <button onClick={() => navigate("/analytics")} className='h-[60px] w-[200px] bg-green-600 rounded-md'>Get Started</button>
+        <a
+          class="m-5 inline-block rounded border border-indigo-600 bg-indigo-600 px-12 py-3 text-sm font-medium text-white hover:bg-indigo-400 hover:text-black focus:outline-none focus:ring active:text-indigo-500"
+          href="#"
+          onClick={() => navigate("/analytics")}
+        >
+          Submit
+        </a>
         </div>
       </div>
 
