@@ -1,3 +1,4 @@
+from sklearn.impute import KNNImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
@@ -8,23 +9,35 @@ def clean_dataset():
     df_H = merged_data[merged_data['Type'] == 'h']
     data = df_H.drop(
         ["Date", "Lattitude", "Type", "Suburb", "KeyID", "Address", "Method", "SellerG", "Postcode", "CouncilArea",
-         "YearBuilt", "Propertycount"], axis=1)
+         "YearBuilt", "Propertycount", "Regionname"], axis=1)
     data.drop_duplicates(inplace=True)
 
-    # Impute missing values using KNN imputer
-    Missing_Columns = ['Landsize', 'Bedroom2', 'Rooms', 'BuildingArea']
-    from sklearn.impute import KNNImputer
+    similarFeatures = ['Landsize', 'Bedroom2', 'Rooms', 'BuildingArea']
     imputer = KNNImputer(n_neighbors=5)
-    DataSubset = data[Missing_Columns]
-    Data_imputed = imputer.fit_transform(DataSubset)
-    Data_imputed = pd.DataFrame(Data_imputed, columns=Missing_Columns)
-    data[Missing_Columns] = Data_imputed
+    dataSubset = data[similarFeatures]
+    dataImputed = imputer.fit_transform(dataSubset)
+    dataImputed = pd.DataFrame(dataImputed, columns=similarFeatures)
+    data['BuildingArea'] = data['BuildingArea'].fillna(dataImputed['BuildingArea'])
+
+    similarFeatures = ['Landsize', 'Bedroom2', 'Rooms', 'BuildingArea']
+    imputer = KNNImputer(n_neighbors=5)
+    dataSubset = data[similarFeatures]
+    dataImputed = imputer.fit_transform(dataSubset)
+    dataImputed = pd.DataFrame(dataImputed, columns=similarFeatures)
+    data['Landsize'] = data['Landsize'].fillna(dataImputed['Landsize'])
 
     cleaned_data = data.dropna()
+
     return cleaned_data
 
-def train_model():
+def train_model(limit):
     data = clean_dataset()
+
+    Q1 = data['Price'].quantile(0.5)
+    Q3 = data['Price'].quantile(0.75)
+    IQR = Q3 - Q1
+    data = data[(data['Price'] >= (Q1 - 1.5 * IQR)) & (data['Price'] <= (Q3 + 1.5 * IQR))]
+
     X = data.drop(['Price'], axis=1)
     Y = data['Price']
 
@@ -47,15 +60,19 @@ def train_model():
 
     # Prepare output data for front-end visualization
     prediction_data = {
-        "predictions": [{"x": x, "y": y} for x, y in zip(X_test['Rooms'], predictions)],
-        # Use the relevant feature for x
-        "metrics": {
-            "r2": round(r2, 2),
-            "mae": round(mae, 2),
-            "mse": round(mse, 2),
-            "rmse": round(rmse, 2),
-        }
+        "predictions": [{"x": float(x), "y": float(y)} for x, y in zip(X_test['Rooms'], predictions)],
+        "metrics": [
+            {"metric": "r2", "value": round(r2, 2)},
+            {"metric": "mae", "value": round(mae, 2)},
+            {"metric": "mse", "value": round(mse, 2)},
+            {"metric": "rmse", "value": round(rmse, 2)},
+        ]
     }
 
-    return prediction_data
+    # Limit the number of predictions returned
+    limited_predictions = prediction_data["predictions"][:limit]
 
+    return {
+        "predictions": limited_predictions,
+        "metrics": prediction_data["metrics"]
+    }

@@ -1,23 +1,15 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from AI import train_model
-from typing import List, Dict
+from typing import List, Dict, Any
 
 from pydantic import BaseModel
 
 # MODEL FOR TAKING IN DATA
-class HousingData(BaseModel):
-    rooms: int
-    distance: int
-    bedrooms: int
-    bathrooms: int
-    cars: int
-    landSize: int
-    buildingArea: float
-    longitude: float
-    regionName: str
-    type: str
-    price: int
+class PredictionResponse(BaseModel):
+    predictions: List[Dict[str, float]]
+    metrics: List[Dict[str, Any]]  # Change this line if you want to keep metrics as a dict
+
 
 # CREATE A FILE WITH A FUNCTION THAT RE-TEACHES THE AI MODEL EVERYTIME THERE IS AN UPDATE TO THE DATABASE
 
@@ -38,9 +30,9 @@ app.add_middleware(
 
 # NEED AN END POINT THAT RETRIEVES DATA FOR THE FRONT END
 
-@app.get("/regression-data", response_model=Dict[str, List[Dict[str, float]]])
-async def get_regression_data():
-    data = train_model()
+@app.get("/regression-data", response_model=PredictionResponse)
+async def get_regression_data(limit: int = Query(25000, ge=1)):
+    data = train_model(limit)
     return data
 
 @app.get("/")
