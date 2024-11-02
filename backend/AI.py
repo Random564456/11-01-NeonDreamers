@@ -1,12 +1,13 @@
+import pandas as pd
 from sklearn.impute import KNNImputer
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
-import pandas as pd
 
-def clean_dataset():
-    merged_data = pd.read_csv("./datasets/MergedDataset.csv")
-    df_H = merged_data[merged_data['Type'] == 'h']
+
+def clean_dataset(merged_data, house_type):
+
+    df_H = merged_data[merged_data['Type'] == house_type]
     data = df_H.drop(
         ["Date", "Lattitude", "Type", "Suburb", "KeyID", "Address", "Method", "SellerG", "Postcode", "CouncilArea",
          "YearBuilt", "Propertycount", "Regionname"], axis=1)
@@ -30,8 +31,8 @@ def clean_dataset():
 
     return cleaned_data
 
-def train_model(limit):
-    data = clean_dataset()
+def train_model(merged_data, house_type):
+    data = clean_dataset(merged_data, house_type)
 
     Q1 = data['Price'].quantile(0.5)
     Q3 = data['Price'].quantile(0.75)
@@ -69,10 +70,9 @@ def train_model(limit):
         ]
     }
 
-    # Limit the number of predictions returned
-    limited_predictions = prediction_data["predictions"][:limit]
+    prediction_data["predictions"] = prediction_data["predictions"][:100]
 
     return {
-        "predictions": limited_predictions,
+        "predictions": prediction_data["predictions"],
         "metrics": prediction_data["metrics"]
     }

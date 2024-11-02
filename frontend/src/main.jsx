@@ -16,7 +16,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/" element={<Landing />} />
         <Route path='/analytics' element={<Analytics />}/>
       </Routes>
-      <Footer />
     </BrowserRouter>
   </React.StrictMode>,
 )

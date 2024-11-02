@@ -1,7 +1,10 @@
-from fastapi import FastAPI, Query
+import io
+
+from fastapi import FastAPI, Query, UploadFile, File, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
-from AI import train_model
-from typing import List, Dict, Any
+from AI import train_model, clean_dataset
+from typing import List, Dict, Any, Literal
+import pandas as pd
 
 from pydantic import BaseModel
 
@@ -26,23 +29,12 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-
+merged_data = pd.read_csv("./datasets/MergedDataset.csv")
 
 # NEED AN END POINT THAT RETRIEVES DATA FOR THE FRONT END
 
-@app.get("/regression-data", response_model=PredictionResponse)
-async def get_regression_data(limit: int = Query(25000, ge=1)):
-    data = train_model(limit)
+@app.get("/regression-data/{house_type}", response_model=PredictionResponse)
+async def get_regression_data(house_type: Literal["h", "u", "t"]):
+    data = train_model(merged_data, house_type)
     return data
-
-@app.get("/")
-async def root():
-    # RETRIEVE DATA FOR PREDICTIONS
-    return {"Hello": "World"}
-
-# NEED AN END POINT THAT TAKES IN DATA AND ADDS IT TO THE DATASET (POST REQUEST)
-
-@app.post("/uploadData")
-async def uploadData():
-    return
 
