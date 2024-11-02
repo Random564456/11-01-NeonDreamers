@@ -13,9 +13,9 @@ class PredictionResponse(BaseModel):
     predictions: List[Dict[str, float]]
     metrics: List[Dict[str, Any]]  # Change this line if you want to keep metrics as a dict
 
-
-# CREATE A FILE WITH A FUNCTION THAT RE-TEACHES THE AI MODEL EVERYTIME THERE IS AN UPDATE TO THE DATABASE
-
+class PredictionRequest(BaseModel):
+    house_type: Literal["h", "u", "t"]
+    comparison: Literal["Rooms", "Distance", "Bathroom", "Landsize", "BuildingArea"]
 
 # Using uvicorn for application auto refresh
 # Add CORS middleware
@@ -33,8 +33,14 @@ merged_data = pd.read_csv("./datasets/MergedDataset.csv")
 
 # NEED AN END POINT THAT RETRIEVES DATA FOR THE FRONT END
 
-@app.get("/regression-data/{house_type}", response_model=PredictionResponse)
-async def get_regression_data(house_type: Literal["h", "u", "t"]):
-    data = train_model(merged_data, house_type)
-    return data
+@app.get("/connection")
+async def connection():
+    return {
+        "connection": "connection established"
+    }
 
+@app.post("/regression-data", response_model=PredictionResponse)
+async def get_regression_data(request: PredictionRequest):
+    # Use the fields in `request` to process and train the model
+    data = train_model(merged_data, request.house_type, request.comparison)
+    return data

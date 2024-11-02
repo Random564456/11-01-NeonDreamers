@@ -7,6 +7,8 @@ import numpy as np
 
 def clean_dataset(merged_data, house_type):
 
+    merged_data = merged_data[:10000]
+
     df_H = merged_data[merged_data['Type'] == house_type]
     data = df_H.drop(
         ["Date", "Lattitude", "Type", "Suburb", "KeyID", "Address", "Method", "SellerG", "Postcode", "CouncilArea",
@@ -29,9 +31,10 @@ def clean_dataset(merged_data, house_type):
 
     cleaned_data = data.dropna()
 
+
     return cleaned_data
 
-def train_model(merged_data, house_type):
+def train_model(merged_data, house_type, comparison):
     data = clean_dataset(merged_data, house_type)
 
     Q1 = data['Price'].quantile(0.5)
@@ -61,7 +64,7 @@ def train_model(merged_data, house_type):
 
     # Prepare output data for front-end visualization
     prediction_data = {
-        "predictions": [{"x": float(x), "y": float(y)} for x, y in zip(X_test['Rooms'], predictions)],
+        "predictions": [{"x": float(x), "y": float(y)} for x, y in zip(X_test[comparison], predictions)],
         "metrics": [
             {"metric": "r2", "value": round(r2, 2)},
             {"metric": "mae", "value": round(mae, 2)},
