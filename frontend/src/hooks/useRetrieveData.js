@@ -37,7 +37,6 @@ function useRetrieveData(setLoadingData, setData, houseType, prediction) {
                     }
                     // Check for empty response
                     const text = await response.text();
-                    console.log("Raw response text:", text); // Log raw response
 
                     if (!text) {
                         console.error("Empty response received from server.");
@@ -47,7 +46,6 @@ function useRetrieveData(setLoadingData, setData, houseType, prediction) {
                     return JSON.parse(text); // Parse as JSON if not empty
                 })
                 .then((data) => {
-                    console.log("Backend response:", data); // Log the parsed JSON response
 
                     // Check if 'predictions' exists in the response
                     if (data && data.predictions) {

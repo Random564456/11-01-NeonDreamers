@@ -11,7 +11,7 @@ const Info = () => {
         <p>Assignment 3</p>
       </div>
       <div className="flex flex-col items-center gap-10 my-10">
-        <div className="card w-[500px] card-side bg-base-100 shadow-xl">
+        <div className="card w-auto card-side bg-base-100 shadow-xl">
           <figure>
             <img
               src="https://swinburne.instructure.com/images/thumbnails/33592771/3kwCSVLfJzFsjKiybU0exEDUcnuBE8fXMiPVDQYQ"
@@ -28,12 +28,12 @@ const Info = () => {
                 href="mailto:104268899@student.swin.edu.au"
                 className="btn btn-primary"
               >
-                email
+                Email me
               </a>
             </div>
           </div>
         </div>
-        <div className="card w-[500px] card-side bg-base-100 shadow-xl">
+        <div className="card w-auto card-side bg-base-100 shadow-xl">
           <figure>
             <img
               src="https://swinburne.instructure.com/images/messages/avatar-50.png"
@@ -43,19 +43,19 @@ const Info = () => {
           <div className="card-body">
             <h2 className="card-title">Thomas Peacock</h2>
             <p>
-              Student ID: 104268899 <br /> Email: 104268899@student.swin.edu.au
+              Student ID: 102173577 <br /> Email: 102173577@student.swin.edu.au
             </p>
             <div className="card-actions justify-end">
               <a
                 href="mailto:104268899@student.swin.edu.au"
                 className="btn btn-primary"
               >
-                email
+                Email me
               </a>
             </div>
           </div>
         </div>
-        <div className="card w-[500px] card-side bg-base-100 shadow-xl">
+        <div className="card w-auto card-side bg-base-100 shadow-xl">
           <figure>
             <img
               src="https://swinburne.instructure.com/images/messages/avatar-50.png"
@@ -64,16 +64,21 @@ const Info = () => {
           </figure>
           <div className="card-body">
             <h2 className="card-title">Nitesh Gurung </h2>
-            <p>Click the button to watch on Jetflix app.</p>
+            <p>Student ID: 104484695 <br /> Email: 104484695@student.swin.edu.au</p>
             <div className="card-actions justify-end">
               <a
                 href="mailto:104268899@student.swin.edu.au"
                 className="btn btn-primary"
               >
-                email
+                Email me
               </a>
             </div>
           </div>
+        </div>
+        <div>
+            UI Component Library used: <br/>
+            DaisyUI https://daisyui.com/ <br/>
+            HyperUI https://www.hyperui.dev/
         </div>
       </div>
     </div>
