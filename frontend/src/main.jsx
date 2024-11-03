@@ -6,6 +6,7 @@ import './index.css'
 import Navbar from './components/Navbar.jsx';
 import Footer from './components/Footer.jsx';
 import Analytics from './pages/Analytics/index.jsx';
+import Info from './pages/Info/index.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -15,7 +16,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path='/analytics' element={<Analytics />}/>
+        <Route path='/Info' element={<Info />}/>
       </Routes>
+      <Footer />
     </BrowserRouter>
   </React.StrictMode>,
 )

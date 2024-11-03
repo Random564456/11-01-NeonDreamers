@@ -1,4 +1,5 @@
 import io
+from uu import Error
 
 from fastapi import FastAPI, Query, UploadFile, File, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware

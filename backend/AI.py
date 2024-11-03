@@ -7,7 +7,7 @@ import numpy as np
 
 def clean_dataset(merged_data, house_type):
 
-    merged_data = merged_data[:10000]
+    merged_data = merged_data[:15000]
 
     df_H = merged_data[merged_data['Type'] == house_type]
     data = df_H.drop(

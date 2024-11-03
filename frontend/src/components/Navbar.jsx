@@ -25,8 +25,7 @@ const Navbar = () => {
           >
             <option onClick={() => navigate("/")}>Landing</option>
             <option onClick={() => navigate("/analytics")}>Analytics</option>
-            <option onClick={() => navigate("/comparison")}>Comparison</option>
-            <option onClick={() => navigate("/map")}>Map</option>
+            <option onClick={() => navigate("/info")}>Info</option>
           </select>
         </div>
 
@@ -50,17 +49,10 @@ const Navbar = () => {
               </a>
 
               <a
-                onClick={() => navigate("/comparison")}
+                onClick={() => navigate("/info")}
                 className={location == "/comparison" ? selected : notSelected}
               >
-                Comparison
-              </a>
-
-              <a
-                onClick={() => navigate("/map")}
-                className={location == "/map" ? selected : notSelected}
-              >
-                Map
+                Info
               </a>
             </nav>
           </div>

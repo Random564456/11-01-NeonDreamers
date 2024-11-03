@@ -5,9 +5,9 @@ function useRetrieveData(setLoadingData, setData, houseType, prediction) {
     const previousPrediction = useRef(prediction);
 
     useEffect(() => {
-        // Check if houseType has changed
+        // Check if houseType or prediction has changed
         if (previousHouseType.current !== houseType || previousPrediction.current !== prediction) {
-            // Clear local storage when houseType changes
+            // Clear local storage when houseType or prediction changes
             localStorage.removeItem("predictions");
             previousHouseType.current = houseType;
             previousPrediction.current = prediction;
@@ -26,12 +26,37 @@ function useRetrieveData(setLoadingData, setData, houseType, prediction) {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({house_type: houseType, comparison: prediction}),
+                body: JSON.stringify({ house_type: houseType, comparison: prediction }),
             })
-                .then((response) => response.json())
+                .then(async (response) => {
+                    if (!response.ok) {
+                        // Log any non-200 responses
+                        const errorText = await response.text();
+                        console.error("Fetch error response:", errorText);
+                        throw new Error(`Error: ${response.status} ${response.statusText}`);
+                    }
+                    // Check for empty response
+                    const text = await response.text();
+                    console.log("Raw response text:", text); // Log raw response
+
+                    if (!text) {
+                        console.error("Empty response received from server.");
+                        throw new Error("Empty response from server");
+                    }
+
+                    return JSON.parse(text); // Parse as JSON if not empty
+                })
                 .then((data) => {
-                    localStorage.setItem("predictions", JSON.stringify(data.predictions));
-                    setData(data.predictions);
+                    console.log("Backend response:", data); // Log the parsed JSON response
+
+                    // Check if 'predictions' exists in the response
+                    if (data && data.predictions) {
+                        localStorage.setItem("predictions", JSON.stringify(data.predictions));
+                        setData(data.predictions);
+                    } else {
+                        console.error("No 'predictions' key in response data:", data);
+                        setData([]); // Set to empty array if predictions is undefined
+                    }
                     setLoadingData(false); // Data loading is complete
                 })
                 .catch((error) => {
@@ -40,7 +65,6 @@ function useRetrieveData(setLoadingData, setData, houseType, prediction) {
                 });
         }
     }, [houseType, prediction]);
-
 }
 
 export default useRetrieveData;

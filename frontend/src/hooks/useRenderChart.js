@@ -1,15 +1,15 @@
 import * as d3 from "d3";
 import { useEffect } from "react";
 
-function useRenderChart(loadingData, data, svgRef, input2, input) {
+function useRenderChart(loadingData, data, svgRef, input2) {
     useEffect(() => {
         if (!loadingData && data.length > 0) {
             const svg = d3.select(svgRef.current);
             svg.selectAll("*").remove(); // Clear previous contents
 
             // Set dimensions and margins
-            const width = 1000;
-            const height = 700;
+            const width = 700;
+            const height = 500;
             const margin = { top: 20, right: 30, bottom: 40, left: 60 };
 
             // Define scales
